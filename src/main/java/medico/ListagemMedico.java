@@ -4,17 +4,49 @@
  */
 package medico;
 
+import clinica.daos.MedicoDao;
+import entidades.Medico;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author User
  */
 public class ListagemMedico extends javax.swing.JFrame {
 
+    private MedicoDao medicoDao;
+
     /**
      * Creates new form ListagemMedico
      */
     public ListagemMedico() {
         initComponents();
+        medicoDao = new MedicoDao();
+        carregarMedicos();
+    }
+
+    private void carregarMedicos() {
+        try {
+            List<Medico> medicos = medicoDao.listar();
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0); // Limpa a tabela antes de adicionar novos dados
+            for (Medico medico : medicos) {
+                model.addRow(new Object[]{
+                    medico.getId(),
+                    medico.getNome(),
+                    medico.getCrm(),
+                    medico.getUfCrm(), 
+                    medico.getEspecialidade().getNome(),
+                    medico.getTelefone()
+                });
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar médicos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -26,21 +58,142 @@ public class ListagemMedico extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        btnEditar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
+        btnSalvar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome", "CRM", "UF CRM", "Especialidade", "Telefone"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true, true // ID não editável, os outros sim
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
+
+        btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE) // Aumentado o tamanho para acomodar UF CRM e melhorar o layout
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEditar)
+                    .addComponent(btnExcluir)
+                    .addComponent(btnSalvar))
+                .addGap(0, 11, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(btnEditar)
+                .addGap(18, 18, 18)
+                .addComponent(btnExcluir)
+                .addGap(18, 18, 18)
+                .addComponent(btnSalvar)
+                .addContainerGap(107, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            JOptionPane.showMessageDialog(this, "Agora você pode editar os dados diretamente na tabela. Clique em \'Salvar\' para aplicar as alterações.", "Editar", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            int idMedico = (int) jTable1.getValueAt(selectedRow, 0);
+            int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir este médico?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    medicoDao.deletar(idMedico);
+                    carregarMedicos();
+                    JOptionPane.showMessageDialog(this, "Médico excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(this, "Erro ao excluir médico: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            try {
+                int id = (int) jTable1.getValueAt(selectedRow, 0);
+                String nome = (String) jTable1.getValueAt(selectedRow, 1);
+                String crm = (String) jTable1.getValueAt(selectedRow, 2);
+                String ufCrm = (String) jTable1.getValueAt(selectedRow, 3); 
+                String especialidadeNome = (String) jTable1.getValueAt(selectedRow, 4); 
+                String telefone = (String) jTable1.getValueAt(selectedRow, 5); 
+
+                clinica.daos.EspecialidadeDao especialidadeDao = new clinica.daos.EspecialidadeDao();
+                entidades.Especialidade especialidade = especialidadeDao.buscarPorNome(especialidadeNome);
+
+                if (especialidade == null) {
+                    JOptionPane.showMessageDialog(this, "Especialidade não encontrada. Por favor, insira uma especialidade válida.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                Medico medico = new Medico(id, nome, crm, ufCrm, especialidade, telefone); 
+                medicoDao.atualizar(medico);
+                carregarMedicos();
+                JOptionPane.showMessageDialog(this, "Médico atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Erro ao salvar alterações: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha para salvar as alterações.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -78,5 +231,12 @@ public class ListagemMedico extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnExcluir;
+    private javax.swing.JButton btnSalvar;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
+
+

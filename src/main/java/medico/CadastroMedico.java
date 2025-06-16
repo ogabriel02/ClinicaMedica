@@ -4,6 +4,15 @@
  */
 package medico;
 
+import clinica.daos.EspecialidadeDao;
+import clinica.daos.MedicoDao;
+import entidades.Especialidade;
+import entidades.Medico;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 /**
  *
  * @author User
@@ -15,8 +24,28 @@ public class CadastroMedico extends javax.swing.JFrame {
      */
     public CadastroMedico() {
         initComponents();
+        
+        IdText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
+                if (!Character.isDigit(c) || IdText.getText().length() >= 5) {
+                    evt.consume();
+                }
+            }
+        });
+        
+        CrmText.addKeyListener(new java.awt.event.KeyAdapter() {
+    public void keyTyped(java.awt.event.KeyEvent evt) {
+        char c = evt.getKeyChar();
+        // Bloqueia se não for dígito ou se já houver 6 caracteres
+        if (!Character.isDigit(c) || CrmText.getText().length() >= 6) {
+                    evt.consume();
+                }
+            }
+        });
     }
-
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,21 +55,249 @@ public class CadastroMedico extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        NomeText = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        IdText = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        EspecialidadeText = new javax.swing.JTextField();
+        btnSalvar = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        CrmText = new javax.swing.JTextField();
+        ufCRM = new javax.swing.JComboBox<>();
+        TelefoneText = new javax.swing.JTextField();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        NomeText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NomeTextActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Cadastro");
+
+        jLabel2.setText("Nome:");
+
+        jLabel3.setText("ID:");
+
+        IdText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IdTextActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Especialidade:");
+
+        EspecialidadeText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EspecialidadeTextActionPerformed(evt);
+            }
+        });
+
+        btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("CRM:");
+
+        jLabel6.setText("Telefone:");
+
+        CrmText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CrmTextActionPerformed(evt);
+            }
+        });
+
+        ufCRM.setMaximumRowCount(20);
+        ufCRM.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO" }));
+        ufCRM.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ufCRMActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel4)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(EspecialidadeText))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jLabel3))
+                            .addGap(35, 35, 35)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(NomeText, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(TelefoneText, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(CrmText, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(IdText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(ufCRM, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addComponent(btnSalvar)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(NomeText))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(EspecialidadeText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(IdText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(CrmText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ufCRM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TelefoneText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addComponent(btnSalvar)
+                .addGap(43, 43, 43))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void NomeTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NomeTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_NomeTextActionPerformed
+
+    private void IdTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IdTextActionPerformed
+        
+    }//GEN-LAST:event_IdTextActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        String idText = IdText.getText().trim();
+        String nome = NomeText.getText().trim();
+        String especialidadeNome = EspecialidadeText.getText().trim();
+        String crm = CrmText.getText().trim();
+        String ufCrm = (String) ufCRM.getSelectedItem();
+        String telefone = TelefoneText.getText().trim();
+        
+        //validaçao ID
+        if (idText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "O campo ID é obrigatório!", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int id;
+        try {
+            id = Integer.parseInt(idText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "O campo ID deve ser um número válido!", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Validação do Nome
+        if(nome.length() < 1 || !nome.matches("[a-zA-ZáéíóúâêîôûãõçÁÉÍÓÚÂÊÎÔÛÃÕÇ ]+")) {
+            JOptionPane.showMessageDialog(this, "O campo Nome é obrigatório e deve conter apenas letras.", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validação da Especialidade
+        if (especialidadeNome.isEmpty() || !especialidadeNome.matches("[a-zA-ZáéíóúâêîôûãõçÁÉÍÓÚÂÊÎÔÛÃÕÇ ]+")) {
+            JOptionPane.showMessageDialog(this, "O campo Especialidade é obrigatório e deve conter apenas letras.", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Validação do CRM
+        if (crm.isEmpty() || !crm.matches("\\d{1,6}")) {
+            JOptionPane.showMessageDialog(this, "O campo CRM é obrigatório e deve conter até 6 dígitos.", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Validação do Telefone
+        if (!telefone.isEmpty() && !telefone.matches("\\d{10,11}")) {
+            JOptionPane.showMessageDialog(this, "O campo Telefone deve conter 10 ou 11 dígitos (se preenchido).", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            // Verificar se a especialidade existe ou criar uma nova
+            EspecialidadeDao especialidadeDao = new EspecialidadeDao();
+            Especialidade especialidade = null;
+            for (Especialidade esp : especialidadeDao.listar()) {
+                if (esp.getNome().equalsIgnoreCase(especialidadeNome)) {
+                    especialidade = esp;
+                    break;
+                }
+            }
+            if (especialidade == null) {
+                especialidade = new Especialidade(0, especialidadeNome);
+                especialidadeDao.inserir(especialidade);
+                // Recuperar a especialidade recém-inserida para obter o ID
+                for (Especialidade esp : especialidadeDao.listar()) {
+                    if (esp.getNome().equalsIgnoreCase(especialidadeNome)) {
+                        especialidade = esp;
+                        break;
+                    }
+                }
+                if (especialidade == null) {
+                    throw new SQLException("Não foi possível recuperar a especialidade recém-inserida.");
+                }
+            }
+
+            // Criar e salvar o médico
+            Medico medico = new Medico(id, nome, crm, ufCrm, especialidade, telefone);
+            MedicoDao medicoDao = new MedicoDao();
+            medicoDao.inserir(medico);
+            JOptionPane.showMessageDialog(this, "Médico salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            // Limpar os campos após salvar
+            IdText.setText("");
+            NomeText.setText("");
+            EspecialidadeText.setText("");
+            CrmText.setText("");
+            ufCRM.setSelectedIndex(0);
+            TelefoneText.setText("");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar médico: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void ufCRMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ufCRMActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ufCRMActionPerformed
+
+    private void CrmTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrmTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CrmTextActionPerformed
+
+    private void EspecialidadeTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EspecialidadeTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_EspecialidadeTextActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +335,18 @@ public class CadastroMedico extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField CrmText;
+    private javax.swing.JTextField EspecialidadeText;
+    private javax.swing.JTextField IdText;
+    private javax.swing.JTextField NomeText;
+    private javax.swing.JTextField TelefoneText;
+    private javax.swing.JButton btnSalvar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JComboBox<String> ufCRM;
     // End of variables declaration//GEN-END:variables
 }

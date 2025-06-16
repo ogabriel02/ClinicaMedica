@@ -1,5 +1,5 @@
 // PacienteDao.java
-package clinica.daos;
+/*package clinica.daos;
 
 import especialidade.*;
 import java.sql.*;
@@ -35,3 +35,4 @@ public class PacienteDao {
         return lista;
     }
 }
+*/

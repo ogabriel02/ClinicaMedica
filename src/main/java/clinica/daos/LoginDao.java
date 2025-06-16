@@ -1,5 +1,5 @@
 // LoginDao.java
-package clinica.daos;
+/*package clinica.daos;
 
 import especialidade.Login;
 import java.sql.*;
@@ -19,3 +19,4 @@ public class LoginDao {
         return null;
     }
 }
+*/

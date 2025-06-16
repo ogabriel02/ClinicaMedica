@@ -1,5 +1,5 @@
 // ConsultaDao.java
-package clinica.daos;
+/*package clinica.daos;
 
 import especialidade.*;
 import java.sql.*;
@@ -37,3 +37,4 @@ public class ConsultaDao {
         return lista;
     }
 }
+*/

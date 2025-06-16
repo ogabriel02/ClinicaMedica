@@ -1,7 +1,10 @@
-// EspecialidadeDao.java
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package clinica.daos;
 
-import especialidade.Especialidade;
+import entidades.Especialidade;
 import java.sql.*;
 import java.util.*;
 
@@ -38,6 +41,19 @@ public class EspecialidadeDao {
         return null;
     }
 
+    public Especialidade buscarPorNome(String nome) throws SQLException {
+        String sql = "SELECT * FROM especialidade WHERE nome = ?";
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nome);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Especialidade(rs.getInt("id"), rs.getString("nome"));
+                }
+            }
+        }
+        return null;
+    }
+
     public void atualizar(Especialidade esp) throws SQLException {
         String sql = "UPDATE especialidade SET nome = ? WHERE id = ?";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -55,3 +71,5 @@ public class EspecialidadeDao {
         }
     }
 }
+
+
