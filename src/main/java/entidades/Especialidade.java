@@ -1,15 +1,19 @@
-// Especialidade.java
 package entidades;
+
 
 public class Especialidade {
     private int id;
     private String nome;
-    
+
+    public Especialidade() {
+    }
+
     public Especialidade(int id, String nome) {
         this.id = id;
         this.nome = nome;
     }
 
+    // Getters e Setters
     public int getId() {
         return id;
     }
@@ -25,9 +29,5 @@ public class Especialidade {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    @Override
-    public String toString() {
-        return nome; // Para exibir no JComboBox
-    }
 }
+

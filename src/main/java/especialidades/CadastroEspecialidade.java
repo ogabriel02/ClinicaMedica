@@ -4,16 +4,20 @@
  */
 package especialidades;
 
+import clinica.daos.EspecialidadeDao;
+import entidades.Especialidade;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ehf_v
  */
-public class EditarEspecialidade extends javax.swing.JFrame {
+public class CadastroEspecialidade extends javax.swing.JFrame {
 
     /**
      * Creates new form CadastroEspecialidade
      */
-    public EditarEspecialidade() {
+    public CadastroEspecialidade() {
         initComponents();
     }
 
@@ -27,15 +31,20 @@ public class EditarEspecialidade extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        salvarEspecialidade = new javax.swing.JButton();
+        nomeText = new javax.swing.JTextField();
+        salvarButton = new javax.swing.JButton();
         fecharButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Nome");
 
-        salvarEspecialidade.setText("Salvar");
+        salvarButton.setText("Salvar");
+        salvarButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salvarButtonActionPerformed(evt);
+            }
+        });
 
         fecharButton.setText("Fechar");
 
@@ -49,9 +58,9 @@ public class EditarEspecialidade extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(nomeText, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(salvarEspecialidade)
+                        .addComponent(salvarButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(fecharButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -62,16 +71,57 @@ public class EditarEspecialidade extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nomeText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(salvarEspecialidade)
+                    .addComponent(salvarButton)
                     .addComponent(fecharButton))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void salvarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarButtonActionPerformed
+        boolean isValid = validarDadosObrigatorios();
+        if (isValid == true) {
+            //armazenar no banco de dados
+            Especialidade especialidade = new Especialidade();
+            especialidade.setNome(nomeText.getText());
+            
+            try {
+                EspecialidadeDao especialidadeDao = new EspecialidadeDao();
+                especialidadeDao.salvar(especialidade);
+            } catch (Exception exception) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Banco de dados indisponível!");
+            }
+            //Retornar o status da operação para o usuario
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Especialidade cadastrada com sucesso!");
+            //limpar o formulario
+            limparForm();
+        }
+    }//GEN-LAST:event_salvarButtonActionPerformed
+    
+    private void limparForm() {
+        nomeText.setText("");
+        nomeText.requestFocusInWindow();
+    }
+    
+    private boolean validarDadosObrigatorios() {
+        //validar os dados obrigatorios
+        //verificar se o campo nome é != de vazio
+        if (nomeText.getText().isBlank()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "O campo nome é obrigatório!");
+            return false;
+        }
+        return true;
+    }
 
     /**
      * @param args the command line arguments
@@ -90,21 +140,20 @@ public class EditarEspecialidade extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditarEspecialidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroEspecialidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditarEspecialidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroEspecialidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditarEspecialidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroEspecialidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditarEspecialidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroEspecialidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EditarEspecialidade().setVisible(true);
+                new CadastroEspecialidade().setVisible(true);
             }
         });
     }
@@ -112,7 +161,9 @@ public class EditarEspecialidade extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton fecharButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JButton salvarEspecialidade;
+    private javax.swing.JTextField nomeText;
+    private javax.swing.JButton salvarButton;
     // End of variables declaration//GEN-END:variables
 }
+
+

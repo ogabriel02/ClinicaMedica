@@ -4,17 +4,67 @@
  */
 package especialidades;
 
+import clinica.daos.EspecialidadeDao;
+import entidades.Especialidade;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
- * @author User
+ * @author ehf_v
  */
 public class ListagemEspecialidade extends javax.swing.JFrame {
+
+    private List<Especialidade> itemsEspecialidades;
+    private EspecialidadeDao especialidadeDao;
+
+    private DefaultTableModel modelo;
 
     /**
      * Creates new form ListagemEspecialidade
      */
     public ListagemEspecialidade() {
         initComponents();
+        inicializarTabela();
+        inicializarespecialidadeDao();
+        carregarListaEspecialidades();
+        carregarDadosNaTabela();
+    }
+
+    private void inicializarespecialidadeDao() {
+        // O construtor de EspecialidadeDao não lança mais SQLException diretamente.
+        // A exceção é lançada pelos métodos que interagem com o banco de dados.
+        this.especialidadeDao = new EspecialidadeDao();
+    }
+
+    private void inicializarTabela() {
+        String[] colunas = {"ID", "Nome"};
+        this.modelo = new DefaultTableModel(colunas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // impede edição de todas as células
+            }
+        };
+        especialidadesTable.setModel(modelo);
+    }
+
+    private void carregarDadosNaTabela() {
+        modelo.setRowCount(0); // limpa as linhas existentes
+        for (Especialidade e : itemsEspecialidades) {
+            Object[] linha = {e.getId(), e.getNome()};
+            modelo.addRow(linha);
+        }
+    }
+
+    private void carregarListaEspecialidades() {
+        try {
+            itemsEspecialidades = especialidadeDao.listarTodas();
+        } catch (SQLException exception) { 
+            JOptionPane.showMessageDialog(null, "Erro ao carregar os dados!" + exception.getMessage());
+            dispose();
+        }
     }
 
     /**
@@ -26,21 +76,107 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        especialidadesTable = new javax.swing.JTable();
+        editarButton = new javax.swing.JButton();
+        excluirButton = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        especialidadesTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id", "Nome"
+            }
+        ));
+        especialidadesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        especialidadesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(especialidadesTable);
+
+        editarButton.setText("Editar");
+        editarButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarButtonActionPerformed(evt);
+            }
+        });
+
+        excluirButton.setText("Excluir");
+        excluirButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                excluirButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(editarButton, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                    .addComponent(excluirButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addComponent(editarButton)
+                .addGap(18, 18, 18)
+                .addComponent(excluirButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void excluirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excluirButtonActionPerformed
+        int linhaSelecionada = especialidadesTable.getSelectedRow();
+        if (linhaSelecionada != -1) {
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tem certeza que deseja excluir esta especialidade?",
+                    "Confirmação",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (confirm == JOptionPane.YES_OPTION) {
+                excluirEspecialidade(linhaSelecionada);
+                itemsEspecialidades.remove(linhaSelecionada);
+                modelo.removeRow(linhaSelecionada); // Correção aqui
+                // this.carregarDadosNaTabela(); // Não é mais necessário, pois removemos a linha diretamente do modelo
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha para excluir.");
+        }
+
+    }//GEN-LAST:event_excluirButtonActionPerformed
+
+    private void editarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarButtonActionPerformed
+        int selectedRow = especialidadesTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            JOptionPane.showMessageDialog(this, "Agora você pode editar os dados diretamente na tabela.", "Editar", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_editarButtonActionPerformed
+
+    private void excluirEspecialidade(int linhaSelecionada) {
+        try {
+            this.especialidadeDao.deletar(itemsEspecialidades.get(linhaSelecionada).getId());
+        } catch (SQLException exception) { 
+            JOptionPane.showMessageDialog(null, "Erro ao excluir especialidade!" + exception.getMessage());
+            // dispose(); // Não é ideal fechar a janela em caso de erro de exclusão
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -78,5 +214,11 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton editarButton;
+    private javax.swing.JTable especialidadesTable;
+    private javax.swing.JButton excluirButton;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
+
+

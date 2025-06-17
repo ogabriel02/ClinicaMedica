@@ -122,6 +122,12 @@ public class CadastroMedico extends javax.swing.JFrame {
             }
         });
 
+        TelefoneText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TelefoneTextActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -248,23 +254,13 @@ public class CadastroMedico extends javax.swing.JFrame {
         try {
             // Verificar se a especialidade existe ou criar uma nova
             EspecialidadeDao especialidadeDao = new EspecialidadeDao();
-            Especialidade especialidade = null;
-            for (Especialidade esp : especialidadeDao.listar()) {
-                if (esp.getNome().equalsIgnoreCase(especialidadeNome)) {
-                    especialidade = esp;
-                    break;
-                }
-            }
+            Especialidade especialidade = especialidadeDao.buscarPorNome(especialidadeNome);
+
             if (especialidade == null) {
                 especialidade = new Especialidade(0, especialidadeNome);
-                especialidadeDao.inserir(especialidade);
-                // Recuperar a especialidade recém-inserida para obter o ID
-                for (Especialidade esp : especialidadeDao.listar()) {
-                    if (esp.getNome().equalsIgnoreCase(especialidadeNome)) {
-                        especialidade = esp;
-                        break;
-                    }
-                }
+                especialidadeDao.salvar(especialidade);
+                // Após salvar, buscar novamente para obter o ID gerado
+                especialidade = especialidadeDao.buscarPorNome(especialidadeNome);
                 if (especialidade == null) {
                     throw new SQLException("Não foi possível recuperar a especialidade recém-inserida.");
                 }
@@ -298,6 +294,10 @@ public class CadastroMedico extends javax.swing.JFrame {
     private void EspecialidadeTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EspecialidadeTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_EspecialidadeTextActionPerformed
+
+    private void TelefoneTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TelefoneTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TelefoneTextActionPerformed
 
     /**
      * @param args the command line arguments
@@ -350,3 +350,5 @@ public class CadastroMedico extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> ufCRM;
     // End of variables declaration//GEN-END:variables
 }
+
+

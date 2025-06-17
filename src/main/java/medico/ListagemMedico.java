@@ -6,6 +6,8 @@ package medico;
 
 import clinica.daos.MedicoDao;
 import entidades.Medico;
+import clinica.daos.EspecialidadeDao;
+import entidades.Especialidade;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -80,7 +82,7 @@ public class ListagemMedico extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
-            }
+            };
         });
         jScrollPane1.setViewportView(jTable1);
 
