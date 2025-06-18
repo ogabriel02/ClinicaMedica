@@ -19,7 +19,6 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
 
     private List<Especialidade> itemsEspecialidades;
     private EspecialidadeDao especialidadeDao;
-
     private DefaultTableModel modelo;
 
     /**
@@ -44,7 +43,7 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
         this.modelo = new DefaultTableModel(colunas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // impede edição de todas as células
+                return column == 1; // Permite edição apenas da coluna 'Nome'
             }
         };
         especialidadesTable.setModel(modelo);
@@ -80,6 +79,7 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
         especialidadesTable = new javax.swing.JTable();
         editarButton = new javax.swing.JButton();
         excluirButton = new javax.swing.JButton();
+        salvarButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,6 +109,13 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
             }
         });
 
+        salvarButton.setText("Salvar");
+        salvarButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salvarButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -119,7 +126,8 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(editarButton, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                    .addComponent(excluirButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(excluirButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(salvarButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -133,6 +141,8 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
                 .addComponent(editarButton)
                 .addGap(18, 18, 18)
                 .addComponent(excluirButton)
+                .addGap(18, 18, 18)
+                .addComponent(salvarButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -212,13 +222,57 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
             }
         });
     }
+    
+        private void salvarButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        int selectedRow = especialidadesTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            try {
+                // Força a finalização da edição na tabela
+                if (especialidadesTable.isEditing()) {
+                    especialidadesTable.getCellEditor().stopCellEditing();
+                }
+                
+                // Obtém os dados da linha selecionada
+                int id = (int) modelo.getValueAt(selectedRow, 0);
+                String nome = (String) modelo.getValueAt(selectedRow, 1);
+
+                // Valida o campo nome
+                if (nome == null || nome.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "O nome da especialidade não pode estar vazio.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Log para depuração
+                System.out.println("ID da especialidade a ser atualizada: " + id);
+                System.out.println("Novo nome da especialidade: " + nome);
+
+                // Atualiza o objeto Especialidade
+                Especialidade especialidade = itemsEspecialidades.get(selectedRow);
+                especialidade.setNome(nome.trim());
+
+                // Tenta atualizar no banco de dados
+                especialidadeDao.atualizar(especialidade);
+
+                // Atualiza a tabela localmente
+                modelo.setValueAt(nome.trim(), selectedRow, 1);
+                JOptionPane.showMessageDialog(this, "Especialidade atualizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Erro ao salvar alterações: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha para salvar as alterações.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton editarButton;
     private javax.swing.JTable especialidadesTable;
     private javax.swing.JButton excluirButton;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton salvarButton;
     // End of variables declaration//GEN-END:variables
 }
-
-

@@ -27,6 +27,12 @@ public class Medico {
         this.ufCrm = null;
         this.telefone = null;
     }
+    
+    @Override
+    public String toString() {
+        return nome + " (" + crm + ")";
+    }
+
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
