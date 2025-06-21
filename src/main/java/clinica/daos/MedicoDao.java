@@ -1,4 +1,3 @@
-// MedicoDao.java
 package clinica.daos;
 
 import entidades.Especialidade;
@@ -79,6 +78,27 @@ public class MedicoDao {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }
+    }
+
+    public Medico buscarPorNome(String nome) throws SQLException {
+        String sql = "SELECT m.*, e.nome AS nome_esp FROM medico m JOIN especialidade e ON m.especialidade_id = e.id WHERE m.nome = ?";
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nome);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Especialidade esp = new Especialidade(rs.getInt("especialidade_id"), rs.getString("nome_esp"));
+                    return new Medico(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("crm"),
+                        rs.getString("uf_crm"),
+                        esp,
+                        rs.getString("telefone")
+                    );
+                }
+            }
+        }
+        return null;
     }
 }
 

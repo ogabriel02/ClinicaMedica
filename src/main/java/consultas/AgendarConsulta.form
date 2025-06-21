@@ -198,11 +198,17 @@
     <Component class="javax.swing.JTextField" name="espText">
     </Component>
     <Component class="javax.swing.JTextField" name="dthrText">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dthrTextActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="confButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Confirmar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="confButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="fecButton">
       <Properties>

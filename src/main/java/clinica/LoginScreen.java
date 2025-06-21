@@ -1,6 +1,9 @@
 
 package clinica;
 
+import clinica.daos.LoginDao;
+import entidades.Login;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class LoginScreen extends javax.swing.JFrame {
@@ -106,18 +109,27 @@ public class LoginScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_senhaFieldActionPerformed
 
     private void entrarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entrarButtonActionPerformed
-entrarButton.addActionListener((java.awt.event.ActionEvent evt1) -> {
-    String usuario = userText.getText().trim();
-    String senha = new String(senhaField.getPassword()).trim();
-    
-    if (usuario.isEmpty() || senha.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Campo obrigatório", "Erro", JOptionPane.ERROR_MESSAGE);
-    } else {
-        JOptionPane.showMessageDialog(null, "Login realizado com sucesso!");
-        new MenuScreen().setVisible(true);
-        dispose(); // Fecha a tela de login
-    }
-});        
+        String usuario = userText.getText().trim();
+        String senha = new String(senhaField.getPassword()).trim();
+
+        if (usuario.isEmpty() || senha.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Campo obrigatório", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else {
+            LoginDao loginDao = new LoginDao();
+            try {
+                Login login = loginDao.autenticar(usuario, senha);
+                if (login != null) {
+                    JOptionPane.showMessageDialog(null, "Login realizado com sucesso!");
+                    new MenuScreen().setVisible(true);
+                    dispose(); // Fecha a tela de login
+                } else {
+                    JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos", "Erro de Login", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao conectar ao banco de dados: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        }
     }//GEN-LAST:event_entrarButtonActionPerformed
 
     public static void main(String args[]) {
@@ -172,3 +184,5 @@ entrarButton.addActionListener((java.awt.event.ActionEvent evt1) -> {
         }
     }
 }
+
+

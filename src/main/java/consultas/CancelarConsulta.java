@@ -1,7 +1,13 @@
 package consultas;
 
-import javax.swing.JOptionPane;
+import clinica.daos.ConsultaDao;
+import clinica.daos.PacienteDao;
+import entidades.Consulta;
+import entidades.Paciente;
 
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
+import java.util.List;
 
 public class CancelarConsulta extends javax.swing.JFrame {
 
@@ -9,14 +15,48 @@ public class CancelarConsulta extends javax.swing.JFrame {
         initComponents();
         okButton.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(java.awt.event.ActionEvent evt) {
-        boolean camposPreenchidos;
-        camposPreenchidos = !jTextField1.getText().trim().isEmpty()
-                && (simBox.isSelected() || naoBox.isSelected());
+        String nomePaciente = jTextField1.getText().trim();
 
-        if (camposPreenchidos) {
-            JOptionPane.showMessageDialog(null, "Consulta cancelada com sucesso.");
-        } else {
-            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios.");
+        if (nomePaciente.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Por favor, digite o nome do paciente.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!simBox.isSelected()) {
+            JOptionPane.showMessageDialog(null, "Você deve confirmar o cancelamento.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            PacienteDao pacienteDao = new PacienteDao();
+            Paciente paciente = pacienteDao.buscarPorNome(nomePaciente);
+
+            if (paciente == null) {
+                JOptionPane.showMessageDialog(null, "Paciente não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            ConsultaDao consultaDao = new ConsultaDao();
+            List<Consulta> consultas = consultaDao.listar(); // Lista todas as consultas
+            
+            boolean consultaEncontrada = false;
+            for (Consulta c : consultas) {
+                if (c.getPaciente() != null && c.getPaciente().getId() == paciente.getId()) {
+                    consultaDao.deletar(c.getId());
+                    consultaEncontrada = true;
+                    break; 
+                }
+            }
+
+            if (consultaEncontrada) {
+                JOptionPane.showMessageDialog(null, "Consulta cancelada com sucesso.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Nenhuma consulta encontrada para este paciente.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao cancelar consulta: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 });
@@ -151,3 +191,5 @@ volButton.addActionListener(new java.awt.event.ActionListener() {
     private javax.swing.JButton volButton;
     // End of variables declaration//GEN-END:variables
 }
+
+

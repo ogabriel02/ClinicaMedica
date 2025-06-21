@@ -1,6 +1,19 @@
 package consultas;
 
+import clinica.daos.ConsultaDao;
+import clinica.daos.PacienteDao;
+import clinica.daos.MedicoDao;
+import clinica.daos.EspecialidadeDao;
+import entidades.Consulta;
+import entidades.Paciente;
+import entidades.Medico;
+import entidades.Especialidade;
+
 import javax.swing.JOptionPane;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AgendarConsulta extends javax.swing.JFrame {
 
@@ -9,18 +22,74 @@ public class AgendarConsulta extends javax.swing.JFrame {
         initComponents();
         confButton.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(java.awt.event.ActionEvent evt) {
-        boolean camposPreenchidos = !nomeText.getText().trim().isEmpty()
-            && !jTextField1.getText().trim().isEmpty()
-            && !medText.getText().trim().isEmpty()
-            && !espText.getText().trim().isEmpty()
-            && !dthrText.getText().trim().isEmpty()
-            && (jCheckBox1.isSelected() || jCheckBox2.isSelected())
-            && (jCheckBox3.isSelected() || jCheckBox4.isSelected());
+        String nomePaciente = nomeText.getText().trim();
+        String telefonePaciente = jTextField1.getText().trim();
+        String nomeMedico = medText.getText().trim();
+        String nomeEspecialidade = espText.getText().trim();
+        String dataHoraStr = dthrText.getText().trim();
+        boolean retorno = jCheckBox2.isSelected(); // Sim
+        boolean convenio = jCheckBox3.isSelected(); // Sim
 
-        if (camposPreenchidos) {
-            JOptionPane.showMessageDialog(null, "Consulta marcada com sucesso!");
-        } else {
-            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios.");
+        if (nomePaciente.isEmpty() || telefonePaciente.isEmpty() || nomeMedico.isEmpty() || nomeEspecialidade.isEmpty() || dataHoraStr.isEmpty() || (!jCheckBox1.isSelected() && !jCheckBox2.isSelected()) || (!jCheckBox3.isSelected() && !jCheckBox4.isSelected())) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            // Formatar data e hora
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Date dataHora = sdf.parse(dataHoraStr);
+
+            // Buscar ou criar Paciente
+            PacienteDao pacienteDao = new PacienteDao();
+            Paciente paciente = pacienteDao.buscarPorNome(nomePaciente); 
+            if (paciente == null) {
+                // Se o paciente não existe, cria um novo (simplificado, pode precisar de mais campos)
+                paciente = new Paciente();
+                paciente.setNome(nomePaciente);
+                paciente.setTelefone(telefonePaciente);
+                // Outros campos do paciente podem ser solicitados ou preenchidos com valores padrão
+                pacienteDao.inserir(paciente);
+                paciente = pacienteDao.buscarPorNome(nomePaciente); // Busca novamente para obter o ID gerado
+            }
+
+            // Buscar Medico
+            MedicoDao medicoDao = new MedicoDao();
+            Medico medico = medicoDao.buscarPorNome(nomeMedico); 
+            if (medico == null) {
+                JOptionPane.showMessageDialog(null, "Médico não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Buscar Especialidade
+            EspecialidadeDao especialidadeDao = new EspecialidadeDao();
+            Especialidade especialidade = especialidadeDao.buscarPorNome(nomeEspecialidade);
+            if (especialidade == null) {
+                JOptionPane.showMessageDialog(null, "Especialidade não encontrada.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Criar e inserir Consulta
+            Consulta consulta = new Consulta();
+            consulta.setPaciente(paciente);
+            consulta.setMedico(medico);
+            consulta.setEspecialidade(especialidade);
+            consulta.setDataHora(dataHora);
+            consulta.setRetorno(retorno);
+            consulta.setTipo(convenio ? "Convênio" : "Particular");
+
+            ConsultaDao consultaDao = new ConsultaDao();
+            consultaDao.inserir(consulta);
+
+            JOptionPane.showMessageDialog(null, "Consulta agendada com sucesso!");
+            // Limpar campos ou fechar janela
+            // dispose(); 
+
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(null, "Formato de data e hora inválido. Use dd/MM/yyyy HH:mm", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao agendar consulta: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 });
@@ -97,7 +166,18 @@ desmButton.addActionListener(new java.awt.event.ActionListener() {
             }
         });
 
+        dthrText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dthrTextActionPerformed(evt);
+            }
+        });
+
         confButton.setText("Confirmar");
+        confButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confButtonActionPerformed(evt);
+            }
+        });
 
         fecButton.setText("Fechar");
 
@@ -216,6 +296,14 @@ desmButton.addActionListener(new java.awt.event.ActionListener() {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox2ActionPerformed
 
+    private void dthrTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dthrTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dthrTextActionPerformed
+
+    private void confButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_confButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -278,3 +366,5 @@ desmButton.addActionListener(new java.awt.event.ActionListener() {
     private javax.swing.JTextField nomeText;
     // End of variables declaration//GEN-END:variables
 }
+
+

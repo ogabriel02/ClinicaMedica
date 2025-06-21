@@ -76,6 +76,26 @@ public class PacienteDao {
             stmt.executeUpdate();
         }
     }
+
+    public Paciente buscarPorNome(String nome) throws SQLException {
+        String sql = "SELECT * FROM paciente WHERE nome = ?";
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nome);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Paciente(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("cpf"),
+                        rs.getString("telefone"),
+                        rs.getString("endereco"),
+                        rs.getDate("data_nascimento")
+                    );
+                }
+            }
+        }
+        return null;
+    }
 }
 
 
