@@ -6,8 +6,6 @@ package medico;
 
 import clinica.daos.MedicoDao;
 import entidades.Medico;
-import clinica.daos.EspecialidadeDao;
-import entidades.Especialidade;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -116,7 +114,7 @@ public class ListagemMedico extends javax.swing.JFrame {
                     .addComponent(btnEditar)
                     .addComponent(btnExcluir)
                     .addComponent(btnSalvar))
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addGap(0, 13, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
