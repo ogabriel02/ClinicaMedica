@@ -110,11 +110,6 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
         });
 
         salvarButton.setText("Salvar");
-        salvarButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                salvarButtonActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

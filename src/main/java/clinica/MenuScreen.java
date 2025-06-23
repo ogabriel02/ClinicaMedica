@@ -98,7 +98,7 @@ public class MenuScreen extends javax.swing.JFrame {
             }
         });
 
-        lista3.setText("Especialidaes");
+        lista3.setText("Especialidades");
         lista3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lista3ActionPerformed(evt);
@@ -176,7 +176,7 @@ public class MenuScreen extends javax.swing.JFrame {
             .addGap(0, 488, Short.MAX_VALUE)
         );
 
-        jTabbedPane.addTab("tab1", conPanel);
+        jTabbedPane.addTab("Consulta", conPanel);
 
         javax.swing.GroupLayout medPanelLayout = new javax.swing.GroupLayout(medPanel);
         medPanel.setLayout(medPanelLayout);
@@ -189,7 +189,7 @@ public class MenuScreen extends javax.swing.JFrame {
             .addGap(0, 488, Short.MAX_VALUE)
         );
 
-        jTabbedPane.addTab("tab2", medPanel);
+        jTabbedPane.addTab("Médico", medPanel);
 
         javax.swing.GroupLayout pacPanelLayout = new javax.swing.GroupLayout(pacPanel);
         pacPanel.setLayout(pacPanelLayout);
@@ -202,7 +202,7 @@ public class MenuScreen extends javax.swing.JFrame {
             .addGap(0, 488, Short.MAX_VALUE)
         );
 
-        jTabbedPane.addTab("tab3", pacPanel);
+        jTabbedPane.addTab("Paciente", pacPanel);
 
         javax.swing.GroupLayout espPanelLayout = new javax.swing.GroupLayout(espPanel);
         espPanel.setLayout(espPanelLayout);
@@ -215,7 +215,7 @@ public class MenuScreen extends javax.swing.JFrame {
             .addGap(0, 488, Short.MAX_VALUE)
         );
 
-        jTabbedPane.addTab("tab4", espPanel);
+        jTabbedPane.addTab("Especialidade", espPanel);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -228,7 +228,7 @@ public class MenuScreen extends javax.swing.JFrame {
             .addGap(0, 488, Short.MAX_VALUE)
         );
 
-        jTabbedPane.addTab("tab5", jPanel1);
+        jTabbedPane.addTab("Médicos", jPanel1);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -241,7 +241,7 @@ public class MenuScreen extends javax.swing.JFrame {
             .addGap(0, 488, Short.MAX_VALUE)
         );
 
-        jTabbedPane.addTab("tab6", jPanel2);
+        jTabbedPane.addTab("Pacientes", jPanel2);
 
         jPanel3.setPreferredSize(new java.awt.Dimension(600, 500));
 
@@ -256,7 +256,7 @@ public class MenuScreen extends javax.swing.JFrame {
             .addGap(0, 488, Short.MAX_VALUE)
         );
 
-        jTabbedPane.addTab("tab7", jPanel3);
+        jTabbedPane.addTab("Especialidades", jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
