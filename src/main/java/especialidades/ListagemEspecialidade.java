@@ -24,14 +24,20 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
     /**
      * Creates new form ListagemEspecialidade
      */
-    public ListagemEspecialidade() {
-        initComponents();
-        inicializarTabela();
-        inicializarespecialidadeDao();
-        carregarListaEspecialidades();
-        carregarDadosNaTabela();
-    }
+public ListagemEspecialidade() {
+    initComponents();
+    inicializarTabela();
+    inicializarespecialidadeDao();
+    carregarListaEspecialidades();
+    carregarDadosNaTabela();
 
+    // Adiciona o ActionListener para o botão Salvar
+    salvarButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            salvarButtonActionPerformed(evt);
+        }
+    });
+}
     private void inicializarespecialidadeDao() {
         // O construtor de EspecialidadeDao não lança mais SQLException diretamente.
         // A exceção é lançada pelos métodos que interagem com o banco de dados.
