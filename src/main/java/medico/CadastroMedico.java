@@ -8,6 +8,7 @@ import clinica.daos.EspecialidadeDao;
 import clinica.daos.MedicoDao;
 import entidades.Especialidade;
 import entidades.Medico;
+import java.awt.Window;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import java.awt.event.KeyAdapter;
@@ -24,7 +25,7 @@ public class CadastroMedico extends javax.swing.JFrame {
      */
     public CadastroMedico() {
         initComponents();
-        
+        //ID 5 caracteres
         IdText.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 char c = evt.getKeyChar();
@@ -33,12 +34,21 @@ public class CadastroMedico extends javax.swing.JFrame {
                 }
             }
         });
-        
+        //CRM 6 caracteres
         CrmText.addKeyListener(new java.awt.event.KeyAdapter() {
     public void keyTyped(java.awt.event.KeyEvent evt) {
         char c = evt.getKeyChar();
         // Bloqueia se não for dígito ou se já houver 6 caracteres
         if (!Character.isDigit(c) || CrmText.getText().length() >= 6) {
+                    evt.consume();
+                }
+            }
+        });
+        //TELEFONE 11 caracteres
+        TelefoneText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
+                if (!Character.isDigit(c) || TelefoneText.getText().length() >= 11) {
                     evt.consume();
                 }
             }
@@ -214,80 +224,86 @@ public class CadastroMedico extends javax.swing.JFrame {
     }//GEN-LAST:event_IdTextActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        String idText = IdText.getText().trim();
-        String nome = NomeText.getText().trim();
-        String especialidadeNome = EspecialidadeText.getText().trim();
-        String crm = CrmText.getText().trim();
-        String ufCrm = (String) ufCRM.getSelectedItem();
-        String telefone = TelefoneText.getText().trim();
-        
-        //validaçao ID
-        if (idText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "O campo ID é obrigatório!", "Erro de validação", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        int id;
-        try {
-            id = Integer.parseInt(idText);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "O campo ID deve ser um número válido!", "Erro de validação", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        // Validação do Nome
-        if(nome.length() < 1 || !nome.matches("[a-zA-ZáéíóúâêîôûãõçÁÉÍÓÚÂÊÎÔÛÃÕÇ ]+")) {
-            JOptionPane.showMessageDialog(this, "O campo Nome é obrigatório e deve conter apenas letras.", "Erro de validação", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+String idText = IdText.getText().trim();
+    String nome = NomeText.getText().trim();
+    String especialidadeNome = EspecialidadeText.getText().trim();
+    String crm = CrmText.getText().trim();
+    String ufCrm = (String) ufCRM.getSelectedItem();
+    String telefone = TelefoneText.getText().trim();
+    
+    // Validação ID
+    if (idText.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "O campo ID é obrigatório!", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    int id;
+    try {
+        id = Integer.parseInt(idText);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "O campo ID deve ser um número válido!", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    // Validação do Nome
+    if (nome.isEmpty() || !nome.matches("[a-zA-ZáéíóúâêîôûãõçÁÉÍÓÚÂÊÎÔÛÃÕÇ ]+")) {
+        JOptionPane.showMessageDialog(this, "O campo Nome é obrigatório e deve conter apenas letras.", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        // Validação da Especialidade
-        if (especialidadeNome.isEmpty() || !especialidadeNome.matches("[a-zA-ZáéíóúâêîôûãõçÁÉÍÓÚÂÊÎÔÛÃÕÇ ]+")) {
-            JOptionPane.showMessageDialog(this, "O campo Especialidade é obrigatório e deve conter apenas letras.", "Erro de validação", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        // Validação do CRM
-        if (crm.isEmpty() || !crm.matches("\\d{1,6}")) {
-            JOptionPane.showMessageDialog(this, "O campo CRM é obrigatório e deve conter até 6 dígitos.", "Erro de validação", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        // Validação do Telefone
-        if (!telefone.isEmpty() && !telefone.matches("\\d{10,11}")) {
-            JOptionPane.showMessageDialog(this, "O campo Telefone deve conter 10 ou 11 dígitos (se preenchido).", "Erro de validação", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    // Validação da Especialidade
+    if (especialidadeNome.isEmpty() || !especialidadeNome.matches("[a-zA-ZáéíóúâêîôûãõçÁÉÍÓÚÂÊÎÔÛÃÕÇ ]+")) {
+        JOptionPane.showMessageDialog(this, "O campo Especialidade é obrigatório e deve conter apenas letras.", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // Validação do CRM
+    if (crm.isEmpty() || !crm.matches("\\d{1,6}")) {
+        JOptionPane.showMessageDialog(this, "O campo CRM é obrigatório e deve conter até 6 dígitos.", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // Validação do Telefone
+    if (!telefone.isEmpty() && !telefone.matches("\\d{10,11}")) {
+        JOptionPane.showMessageDialog(this, "O campo Telefone deve conter 10 ou 11 dígitos (se preenchido).", "Erro de validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        try {
-            // Verificar se a especialidade existe ou criar uma nova
-            EspecialidadeDao especialidadeDao = new EspecialidadeDao();
-            Especialidade especialidade = especialidadeDao.buscarPorNome(especialidadeNome);
+    try {
+        // Verificar se a especialidade existe ou criar uma nova
+        EspecialidadeDao especialidadeDao = new EspecialidadeDao();
+        Especialidade especialidade = especialidadeDao.buscarPorNome(especialidadeNome);
 
+        if (especialidade == null) {
+            especialidade = new Especialidade(0, especialidadeNome);
+            especialidadeDao.salvar(especialidade);
+            especialidade = especialidadeDao.buscarPorNome(especialidadeNome);
             if (especialidade == null) {
-                especialidade = new Especialidade(0, especialidadeNome);
-                especialidadeDao.salvar(especialidade);
-                // Após salvar, buscar novamente para obter o ID gerado
-                especialidade = especialidadeDao.buscarPorNome(especialidadeNome);
-                if (especialidade == null) {
-                    throw new SQLException("Não foi possível recuperar a especialidade recém-inserida.");
-                }
+                throw new SQLException("Não foi possível recuperar a especialidade recém-inserida.");
             }
-
-            // Criar e salvar o médico
-            Medico medico = new Medico(id, nome, crm, ufCrm, especialidade, telefone);
-            MedicoDao medicoDao = new MedicoDao();
-            medicoDao.inserir(medico);
-            JOptionPane.showMessageDialog(this, "Médico salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            // Limpar os campos após salvar
-            IdText.setText("");
-            NomeText.setText("");
-            EspecialidadeText.setText("");
-            CrmText.setText("");
-            ufCRM.setSelectedIndex(0);
-            TelefoneText.setText("");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao salvar médico: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnSalvarActionPerformed
+
+        // Criar e salvar o médico
+        Medico medico = new Medico(id, nome, crm, ufCrm, especialidade, telefone);
+        MedicoDao medicoDao = new MedicoDao();
+        medicoDao.inserir(medico);
+        JOptionPane.showMessageDialog(this, "Médico salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+        // Atualizar a listagem de médicos
+        for (Window window : Window.getWindows()) {
+            if (window instanceof ListagemMedico) {
+                ((ListagemMedico) window).carregarMedicos();
+            }
+        }
+
+        // Limpar os campos após salvar
+        IdText.setText("");
+        NomeText.setText("");
+        EspecialidadeText.setText("");
+        CrmText.setText("");
+        ufCRM.setSelectedIndex(0);
+        TelefoneText.setText("");
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Erro ao salvar médico: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }    }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void ufCRMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ufCRMActionPerformed
         // TODO add your handling code here:

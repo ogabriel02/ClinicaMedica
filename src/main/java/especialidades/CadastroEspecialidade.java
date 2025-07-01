@@ -6,6 +6,7 @@ package especialidades;
 
 import clinica.daos.EspecialidadeDao;
 import entidades.Especialidade;
+import java.awt.Window;
 import javax.swing.JOptionPane;
 
 /**
@@ -99,28 +100,33 @@ public class CadastroEspecialidade extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void salvarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarButtonActionPerformed
-        boolean isValid = validarDadosObrigatorios();
-        if (isValid == true) {
-            //armazenar no banco de dados
-            Especialidade especialidade = new Especialidade();
-            especialidade.setNome(nomeText.getText());
-            
-            try {
-                EspecialidadeDao especialidadeDao = new EspecialidadeDao();
-                especialidadeDao.salvar(especialidade);
-            } catch (Exception exception) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Banco de dados indisponível!");
+boolean isValid = validarDadosObrigatorios();
+    if (isValid) {
+        // Armazenar no banco de dados
+        Especialidade especialidade = new Especialidade();
+        especialidade.setNome(nomeText.getText().trim());
+        
+        try {
+            EspecialidadeDao especialidadeDao = new EspecialidadeDao();
+            especialidadeDao.salvar(especialidade);
+
+            // Atualizar a listagem de especialidades
+            for (Window window : Window.getWindows()) {
+                if (window instanceof ListagemEspecialidade) {
+                    ((ListagemEspecialidade) window).atualizarTabela();
+                }
             }
-            //Retornar o status da operação para o usuario
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Especialidade cadastrada com sucesso!");
-            //limpar o formulario
+
+            // Retornar o status da operação para o usuário
+            JOptionPane.showMessageDialog(this, "Especialidade cadastrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+            // Limpar o formulário
             limparForm();
+        } catch (Exception exception) {
+            JOptionPane.showMessageDialog(this, "Erro ao cadastrar especialidade: " + exception.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            exception.printStackTrace();
         }
-    }//GEN-LAST:event_salvarButtonActionPerformed
+    }    }//GEN-LAST:event_salvarButtonActionPerformed
     
     private void limparForm() {
         nomeText.setText("");

@@ -277,7 +277,7 @@ public class MenuScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void conButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conButtonActionPerformed
- // Exibe a aba do painel de consultas (supondo que conPanel está numa aba do jTabbedPane)
+     // Exibe a aba do painel de consultas (supondo que conPanel está numa aba do jTabbedPane)
     jTabbedPane.setSelectedComponent(conPanel);
     }//GEN-LAST:event_conButtonActionPerformed
 

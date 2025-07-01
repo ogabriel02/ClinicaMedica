@@ -35,7 +35,7 @@ public class ListagemPaciente extends javax.swing.JFrame {
         });
     }
 
-    private void carregarPacientes() {
+    public void carregarPacientes() {
         DefaultTableModel model = (DefaultTableModel) TableListagemPaciente.getModel();
         model.setRowCount(0); // Limpa a tabela antes de carregar novos dados
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -56,8 +56,7 @@ public class ListagemPaciente extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao carregar pacientes: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
-    }
-    
+    }    
     private void BtnEditarActionPerformed(java.awt.event.ActionEvent evt) {
         int selectedRow = TableListagemPaciente.getSelectedRow();
         if (selectedRow >= 0) {

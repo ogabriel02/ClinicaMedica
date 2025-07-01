@@ -49,23 +49,27 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
         especialidadesTable.setModel(modelo);
     }
 
-    private void carregarDadosNaTabela() {
-        modelo.setRowCount(0); // limpa as linhas existentes
-        for (Especialidade e : itemsEspecialidades) {
-            Object[] linha = {e.getId(), e.getNome()};
-            modelo.addRow(linha);
-        }
+public void carregarListaEspecialidades() {
+    try {
+        itemsEspecialidades = especialidadeDao.listarTodas();
+    } catch (SQLException exception) { 
+        JOptionPane.showMessageDialog(null, "Erro ao carregar os dados: " + exception.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        exception.printStackTrace();
     }
+}
 
-    private void carregarListaEspecialidades() {
-        try {
-            itemsEspecialidades = especialidadeDao.listarTodas();
-        } catch (SQLException exception) { 
-            JOptionPane.showMessageDialog(null, "Erro ao carregar os dados!" + exception.getMessage());
-            dispose();
-        }
+public void carregarDadosNaTabela() {
+    modelo.setRowCount(0); // Limpa as linhas existentes
+    for (Especialidade e : itemsEspecialidades) {
+        Object[] linha = {e.getId(), e.getNome()};
+        modelo.addRow(linha);
     }
+}
 
+public void atualizarTabela() {
+    carregarListaEspecialidades();
+    carregarDadosNaTabela();
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -127,18 +131,19 @@ public class ListagemEspecialidade extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addComponent(editarButton)
-                .addGap(18, 18, 18)
-                .addComponent(excluirButton)
-                .addGap(18, 18, 18)
-                .addComponent(salvarButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(editarButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(excluirButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(salvarButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();

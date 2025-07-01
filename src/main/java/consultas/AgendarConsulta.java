@@ -8,7 +8,7 @@ import entidades.Consulta;
 import entidades.Paciente;
 import entidades.Medico;
 import entidades.Especialidade;
-
+import clinica.MenuScreen;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -17,7 +17,8 @@ import java.util.Date;
 
 public class AgendarConsulta extends javax.swing.JFrame {
 
-  
+  private clinica.MenuScreen menuScreen;
+    
     public AgendarConsulta() {
         initComponents();
         confButton.addActionListener(new java.awt.event.ActionListener() {
@@ -92,6 +93,7 @@ public class AgendarConsulta extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    
 });
 
 fecButton.addActionListener(new java.awt.event.ActionListener() {
@@ -103,9 +105,13 @@ fecButton.addActionListener(new java.awt.event.ActionListener() {
 desmButton.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         new CancelarConsulta().setVisible(true); // Abre a tela CancelarConsulta
-        dispose(); // Fecha a tela atual se desejar
+        if (menuScreen != null) {
+            menuScreen.dispose(); // Fecha a MenuScreen
+        }
+        dispose(); // Fecha a tela AgendarConsulta (se ainda quiser que ela feche)
     }
 });
+
     } 
     
 
@@ -190,6 +196,11 @@ desmButton.addActionListener(new java.awt.event.ActionListener() {
         jCheckBox4.setText("Não");
 
         desmButton.setText("Desmarcar");
+        desmButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                desmButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -206,7 +217,9 @@ desmButton.addActionListener(new java.awt.event.ActionListener() {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
-                                    .addComponent(confButton))
+                                    .addComponent(confButton)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(18, 18, 18)
@@ -230,17 +243,15 @@ desmButton.addActionListener(new java.awt.event.ActionListener() {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(desmButton))))
                             .addComponent(jLabel7)
-                            .addComponent(jLabel5)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
                         .addGap(0, 101, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
                 .addComponent(jLabel1)
-                .addGap(55, 55, 55))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -262,14 +273,14 @@ desmButton.addActionListener(new java.awt.event.ActionListener() {
                     .addComponent(jLabel3)
                     .addComponent(medText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(espText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(dthrText, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13)
+                    .addComponent(espText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dthrText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jCheckBox2)
@@ -306,6 +317,10 @@ desmButton.addActionListener(new java.awt.event.ActionListener() {
     private void confButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_confButtonActionPerformed
+
+    private void desmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desmButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_desmButtonActionPerformed
 
     /**
      * @param args the command line arguments

@@ -2,6 +2,7 @@ package pacientes;
 
 import entidades.Paciente;
 import clinica.daos.PacienteDao;
+import java.awt.Window;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -96,59 +97,88 @@ public class CadastroPaciente extends javax.swing.JFrame {
         });
     }
 
-    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {
-        String nome = TextNome.getText();
-        String cpf = TextCpf.getText();
-        String telefone = TextTelefone.getText();
-        String endereco = TextEndereco.getText();
-        String dataNascimentoStr = TextDataNascimento.getText();
+private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {
+    String nome = TextNome.getText().trim();
+    String cpf = TextCpf.getText().trim();
+    String telefone = TextTelefone.getText().trim();
+    String endereco = TextEndereco.getText().trim();
+    String dataNascimentoStr = TextDataNascimento.getText().trim();
+    String idText = TextId.getText().trim();
 
-        // Validação do CPF
-        if (!cpf.matches("\\d{11}")) {
-            JOptionPane.showMessageDialog(this, "CPF inválido. Deve conter exatamente 11 dígitos numéricos.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        // Validação do Telefone
-        if (!telefone.isEmpty() && !telefone.matches("\\d{10,11}")) {
-            JOptionPane.showMessageDialog(this, "O campo Telefone deve conter 10 ou 11 dígitos (se preenchido).", "Erro de validação", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Validação da data de nascimento
-        Date dataNascimento = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false); // Não permite datas inválidas como 30/02/2023
-        try {
-            dataNascimento = sdf.parse(dataNascimentoStr);
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(this, "Formato de data de nascimento inválido. Use dd/MM/yyyy.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Paciente paciente = new Paciente();
-        paciente.setNome(nome);
-        paciente.setCpf(cpf);
-        paciente.setTelefone(telefone);
-        paciente.setEndereco(endereco);
-        paciente.setDataNascimento(dataNascimento);
-
-        PacienteDao dao = new PacienteDao();
-        try {
-            dao.inserir(paciente);
-            JOptionPane.showMessageDialog(this, "Paciente cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            // Limpar campos após o cadastro
-            TextNome.setText("");
-            TextCpf.setText("");
-            TextTelefone.setText("");
-            TextEndereco.setText("");
-            TextDataNascimento.setText("");
-            TextId.setText(""); // Limpar o campo ID também
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao cadastrar paciente: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
+    // Validação do ID
+    if (idText.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "O campo ID é obrigatório!", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+        return;
     }
+    int id;
+    try {
+        id = Integer.parseInt(idText);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "O campo ID deve ser um número válido!", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Validação do Nome
+    if (nome.isEmpty() || !nome.matches("[a-zA-ZáéíóúâêîôûãõçÁÉÍÓÚÂÊÎÔÛÃÕÇ ]+")) {
+        JOptionPane.showMessageDialog(this, "O campo Nome é obrigatório e deve conter apenas letras.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Validação do CPF
+    if (!cpf.matches("\\d{11}")) {
+        JOptionPane.showMessageDialog(this, "CPF inválido. Deve conter exatamente 11 dígitos numéricos.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Validação do Telefone
+    if (!telefone.isEmpty() && !telefone.matches("\\d{10,11}")) {
+        JOptionPane.showMessageDialog(this, "O campo Telefone deve conter 10 ou 11 dígitos (se preenchido).", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Validação da data de nascimento
+    Date dataNascimento = null;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    sdf.setLenient(false); // Não permite datas inválidas como 30/02/2023
+    try {
+        dataNascimento = sdf.parse(dataNascimentoStr);
+    } catch (ParseException e) {
+        JOptionPane.showMessageDialog(this, "Formato de data de nascimento inválido. Use dd/MM/yyyy.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    Paciente paciente = new Paciente();
+    paciente.setId(id);
+    paciente.setNome(nome);
+    paciente.setCpf(cpf);
+    paciente.setTelefone(telefone);
+    paciente.setEndereco(endereco);
+    paciente.setDataNascimento(dataNascimento);
+
+    PacienteDao dao = new PacienteDao();
+    try {
+        dao.inserir(paciente);
+        JOptionPane.showMessageDialog(this, "Paciente cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+        // Atualizar a listagem de pacientes
+        for (Window window : Window.getWindows()) {
+            if (window instanceof ListagemPaciente) {
+                ((ListagemPaciente) window).carregarPacientes();
+            }
+        }
+
+        // Limpar campos após o cadastro
+        TextNome.setText("");
+        TextCpf.setText("");
+        TextTelefone.setText("");
+        TextEndereco.setText("");
+        TextDataNascimento.setText("");
+        TextId.setText("");
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Erro ao cadastrar paciente: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

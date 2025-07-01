@@ -4,7 +4,7 @@ import clinica.daos.ConsultaDao;
 import clinica.daos.PacienteDao;
 import entidades.Consulta;
 import entidades.Paciente;
-
+import clinica.MenuScreen;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import java.util.List;
@@ -63,10 +63,11 @@ public class CancelarConsulta extends javax.swing.JFrame {
 
 volButton.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(java.awt.event.ActionEvent evt) {
-        new AgendarConsulta().setVisible(true);
+        new MenuScreen().setVisible(true); // Alterado para MenuScreen
         dispose(); // Fecha a tela de cancelamento
     }
 });
+
     }
 
     @SuppressWarnings("unchecked")

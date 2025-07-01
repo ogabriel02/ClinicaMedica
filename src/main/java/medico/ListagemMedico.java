@@ -28,26 +28,26 @@ public class ListagemMedico extends javax.swing.JFrame {
         carregarMedicos();
     }
 
-    private void carregarMedicos() {
-        try {
-            List<Medico> medicos = medicoDao.listar();
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            model.setRowCount(0); // Limpa a tabela antes de adicionar novos dados
-            for (Medico medico : medicos) {
-                model.addRow(new Object[]{
-                    medico.getId(),
-                    medico.getNome(),
-                    medico.getCrm(),
-                    medico.getUfCrm(), 
-                    medico.getEspecialidade().getNome(),
-                    medico.getTelefone()
-                });
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar médicos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+public void carregarMedicos() {
+    try {
+        List<Medico> medicos = medicoDao.listar();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0); // Limpa a tabela antes de adicionar novos dados
+        for (Medico medico : medicos) {
+            model.addRow(new Object[]{
+                medico.getId(),
+                medico.getNome(),
+                medico.getCrm(),
+                medico.getUfCrm(),
+                medico.getEspecialidade().getNome(),
+                medico.getTelefone()
+            });
         }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Erro ao carregar médicos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -95,6 +95,11 @@ public class ListagemMedico extends javax.swing.JFrame {
         });
 
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -173,7 +178,7 @@ public class ListagemMedico extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
-    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow >= 0) {
             int idMedico = (int) jTable1.getValueAt(selectedRow, 0);
@@ -191,7 +196,7 @@ public class ListagemMedico extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Selecione uma linha para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
-    }
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     
     /**
